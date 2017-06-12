@@ -92,6 +92,10 @@ class StepSequencer::REPL
       StepSequencer::SoundBuilder
     end
 
+    def player
+      StepSequencer::Player
+    end
+
     def combine(paths)
       builder.build(
         sources: paths, effect: :Combine
