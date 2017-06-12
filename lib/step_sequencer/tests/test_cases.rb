@@ -10,7 +10,7 @@ class StepSequencer::Tests::TestCases
         tempo: 240,
         limit: 16,
         string: <<-TXT,
-          x _ x _
+          x _ x _       # with a comment
           _ _ x _
         TXT
       )

@@ -4,11 +4,11 @@
 
 This is a Ruby tool to play mp3 files in a step sequencer.
 
-It also handles polyrhythmic playback and 
+It also handles polyrhythmic playback and building sounds using effects like 
 
 #### Depedencies
 
-Some external programs need to be installed (via `apt-get`, `brew`, `yum`, etc)
+Some external programs need to be installed:
 
 `mpg123 ffmpeg sox libsox-fmt-mp3`
 
@@ -27,17 +27,19 @@ require 'step_sequencer'
 #### Usage
 
 There are two main components: `StepSequencer::SoundBuilder` and
-`StepSequencer::SoundPlayer`. A third component,
-`StepSequencer::SoundAnalyser`, can also be useful.
+`StepSequencer::SoundPlayer`
 
 ##### 1. **`StepSequencer::SoundBuilder`**
 
-There are number of `StepSequencer::SoundBuilder::EffectsComponents`
-(this constant refers to a hash, the values of which are classes).
-All of them inherit from and implement the protocol of
-`StepSequencer::SoundBuilder::EffectsComponentProtocol`. To use a custom effect,
-add the class to this list. Through the protocol, they're connected to the
-`StepSequencer::SoundBuilder.build` method.
+This offers only one public method, `.build`, which is drastically overloaded
+and dispatches to a number of other classes (each of which is responsible for
+a single effect). The definitions of these can be found in the source code at
+ `lib/step_sequencer/sound_builder/default_effects/`. To add a custom effect,
+ use one of the existing ones as a template and then add a reference to the class
+ in the `StepSequencer::SoundBuilder::EffectsComponents` hash.
+
+Here is an example. It takes a single input mp3 and creates 12 new ones,
+spanning the "equal temperament" tuning.
 
 ```rb
 # returns nested array (array of generated sounds for each source)
@@ -81,10 +83,10 @@ _change pitch_ (returns array of paths, one for each source)
 new_filenames = builder.build(
   sources: filenames,
   effect: :Pitch,
-  args: [{value: 2}] # doubling pitch to account for 0.5 speed
+  args: [{value: 2}]
 )
 # By default this will adjust the speed so that only the pitch changes.
-# However the `speed_correction: false` arg prevents this.
+# However the `speed_correction: false` arg will prevent this.
 ```
 
 _loop_ (returns array of paths, one for each source)
@@ -118,7 +120,7 @@ new_filenames = builder.build(
   args: [{filename: "foo.mp3"}], # filename arg is optional,
                                  # and one will be auto-generated otherwise.
 )
-`
+```
 
 _overlay_ (returns single path)
 
@@ -129,7 +131,7 @@ new_filenames = builder.build(
   args: [{filename: "foo.mp3"}], # filename arg is optional,
                                  # and one will be auto-generated otherwise.
 )
-`
+```
 
 As the above examples illustrate,  `#build` is always given an array of sources
 (audio paths). `effect` is always a symbol, and although it can be ommitted if
@@ -143,7 +145,7 @@ which is when the sounds are mapped to rows.
 
 For example, say I want to plug in the sounds I created earlier using
 `StepSequencer::SoundBuilder#build`. I have 12 sounds and I want to give each
-of them their own row in the sequencer. This pretty easy to do:
+of them their own row in the sequencer. This is pretty easy to do:
 
 ```rb
 player = StepSequencer::SoundPlayer.new(filenames)
@@ -173,12 +175,12 @@ player.play(
 )
 ```
 
-To use something other than `x` or `_`, use the environment variables
-`STEP_SEQUENCER_GRID_HIT_CHAR` and `STEP_SEQUENCER_GRID_REST_CHAR`
+To use something other than `x` or `_`, set the options `:hit_char` and `:rest_char`.
+
+The following plays the same notes, but with nested arrays and the `:matrix` option.
+The hits/rests here are denoted by 1 and nil, respectively 
 
 ```rb
-# plays the same notes, but with nested arrays.
-# the note/rest are denoted by 1 and nil, respectively
 player.play(
   tempo: 240,
   matrix: 0.upto(11).reduce([]) do |rows, i|
@@ -201,13 +203,12 @@ play the aformentioned 12-step grid 4 times, I'd pass a limit of 48.
 something like `sleep 0.5 while player.playing`
 - the tempo can be understood as BPM in quarter notes. So to get the same speed
 as 16th notes at 120 BPM, use a tempo of 480. The default is 120.
-- The player isn't configured to be manipulated while playing. Use a new instance instead.
+- The player isn't set up to be manipulated while playing. Use a new instance instead.
 
 #### Todos
 
 - precompile the grid into a single mp3. this will result in optimal playback
-  but may be slightly difficult considering many sounds can be played at once,
-  and a single sound can be played over itself.
+- make a nice REPL
 
 #### Tests
 
@@ -217,17 +218,11 @@ Rather, it generates sounds and then plays them back for manual aural
 validation. 
 
 A couple small (1 second) mp3s are bundled with the gem and are used in the tests.
-To run the tests from the command line after installing the gem:
+To run the tests from the command line, use the executable included with the gem:
 
 ```rb
 step_sequencer test
 ```
 
-They are packaged with the distributed gem, so after `require 'step_sequencer'`
-just use `StepSequencer::Tests.run`. Individual cases can also be run by calling
-the class methods of `Builder` and `Player` in `StepSequencer::Tests::TestCases`.
-
-There is one extra dependency required to use the tests, and that's the
-`espeak-ruby` gem. which will indicate what sounds are playing.
-This requires the external tool to be installed as well,
-e.g. `brew install espeak` or `sudo apt-get install espeak`.
+They can also be run from code: `require 'step_sequencer'` then
+`StepSequencer::Tests.run`.

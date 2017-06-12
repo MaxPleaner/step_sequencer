@@ -2,13 +2,6 @@ class StepSequencer::SoundPlayer
 
   using StepSequencer.refinement(:StringBlank)
 
-  HitChar = ENV.fetch("STEP_SEQUENCER_GRID_HIT_CHAR", "x")
-  RestChar = ENV.fetch("STEP_SEQUENCER_GRID_REST_CHAR", "_")
-
-  if [HitChar, RestChar].any? &:blank?
-    raise StandardError, "HitChar or RestChar cannot be just whitespace"
-  end
-
   attr_reader :playing
   
   def initialize(sources)
@@ -16,8 +9,9 @@ class StepSequencer::SoundPlayer
     reset_state
   end
 
-  def play(tempo: 120, string: nil, matrix: nil, limit: nil)
+  def play(tempo: 120, string: nil, matrix: nil, limit: nil, hit_char: 'x', rest_char: '_')
     @limit = limit
+    @hit_char, @rest_char = hit_char, rest_char
     if @playing
       raise( StandardError,
         "A sound player received #play when it was not in a stopped state.
@@ -51,15 +45,15 @@ class StepSequencer::SoundPlayer
   private
 
   def build_matrix_from_string(string)
-    string.tr(" ", '').split("\n").map(&:chars).map do |chars|
+    string.tr(" ", '').gsub(/\#.+$/, '').split("\n").map(&:chars).map do |chars|
       chars.map do |char|
-        if char == hit_char then 1
-        elsif char == rest_char then nil
+        if char == @hit_char then 1
+        elsif char == @rest_char then nil
         else
           raise( StandardError,
             "
               Error playing from string. Found char #{char} which is not
-              one of '#{hit_char}' or '#{rest_char}'.
+              one of '#{@hit_char}' or '#{@rest_char}'.
             "
           )
         end
@@ -119,14 +113,6 @@ class StepSequencer::SoundPlayer
   def init_matrix_state(matrix)
     @row_lengths = matrix.map(&:length)
     @active_steps = Array.new((matrix.length), 0)
-  end
-
-  def hit_char
-    self.class::HitChar
-  end
-
-  def rest_char
-    self.class::RestChar
   end
 
 end
