@@ -55,6 +55,8 @@ filenames = builder.build(
 The `:Scale` effect also allows an `inverse: true` key in `args` which will
 set all pitch change values to their inverse (creating a descending scale).
 
+Right now there is only the equal temperament option, more may be added later
+
 Now say I want to apply a 150% gain to all these files:
 
 ```rb
