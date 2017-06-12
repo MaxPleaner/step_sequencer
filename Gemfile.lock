@@ -1,0 +1,23 @@
+PATH
+  remote: .
+  specs:
+    step_sequencer (1.0.0)
+      espeak-ruby (~> 1)
+      method_source (~> 0.8)
+      thor (~> 0.19)
+
+GEM
+  remote: http://www.rubygems.org/
+  specs:
+    espeak-ruby (1.0.4)
+    method_source (0.8.2)
+    thor (0.19.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  step_sequencer!
+
+BUNDLED WITH
+   1.14.6

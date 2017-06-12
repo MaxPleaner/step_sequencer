@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+Dir.glob("./*.gem").each { |path| `rm #{path}` }
+puts `gem uninstall -x step_sequencer`
+puts `gem build step_sequencer.gemspec`
+Dir.glob("./*.gem").each { |path| puts `gem install -f #{path}` }

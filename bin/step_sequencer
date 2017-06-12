@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require 'step_sequencer'
+require 'thor'
+class StepSequencer::CLI < Thor
+  desc "test", "run tests"
+  def test
+    StepSequencer::Tests.run
+  end
+end
+StepSequencer::CLI.start ARGV
