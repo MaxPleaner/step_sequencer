@@ -18,7 +18,7 @@ class StepSequencer::SoundBuilder
   end
 
   class << self
-    public
+    private
     def effects_components
       StepSequencer::SoundBuilder::EffectsComponents
     end

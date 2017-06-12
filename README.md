@@ -54,9 +54,9 @@ There are two main components: `StepSequencer::SoundBuilder` and
 
 ### StepSequencer::SoundBuilder
 
-This offers only one public method, `.build`, which is overloaded
-    and dispatches to a number of other classes (each of which is responsible for
-    a single effect). 
+This offers only one method, `.build`, which is overloaded and dispatches to a
+number of other classes (each of which is responsible for
+a single effect). 
 
 _note_
 

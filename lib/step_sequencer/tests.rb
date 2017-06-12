@@ -1,7 +1,7 @@
 # =============================================================================
 # A custom test runner. The tests themselves are in test_cases.rb
 # Usage: StepSequencer::Tests.run
-# The public method run_test_collection can also be used; it's more modular.
+# The private method run_test_collection can also be used; it's more modular.
 # =============================================================================
 
 class StepSequencer::Tests
@@ -30,7 +30,7 @@ class StepSequencer::Tests
   end
 
   class << self
-    public
+    private
 
     def builder_tests
       StepSequencer::Tests::TestCases::Builder
@@ -86,7 +86,7 @@ class StepSequencer::Tests
 
   # Helpers made available to test cases (if they include the module)
   module TestCaseHelpers
-    public
+    private
     def asset_path(name)
       Gem.find_files("step_sequencer/test_assets/#{name}.mp3")[0]
     end
