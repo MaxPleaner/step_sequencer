@@ -93,7 +93,7 @@ class StepSequencer::REPL
     end
 
     def player
-      StepSequencer::Player
+      StepSequencer::SoundPlayer
     end
 
     def combine(paths)
