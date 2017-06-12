@@ -42,7 +42,7 @@ class StepSequencer::SoundPlayer
     @limit = nil # an upper limit for steps_played, defaults to no limit
   end
 
-  private
+  protected
 
   def build_matrix_from_string(string)
     string.tr(" ", '').gsub(/\#.+$/, '').split("\n").map(&:chars).map do |chars|

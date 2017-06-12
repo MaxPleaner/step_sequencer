@@ -11,7 +11,7 @@ class StepSequencer::SoundBuilder::DefaultEffects::Speed < protocol
   end
 
   class << self
-    private
+    protected
     def build_outfile_path path, value
       "#{output_dir}/#{SecureRandom.urlsafe_base64}.mp3"
     end
