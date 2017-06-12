@@ -4,7 +4,8 @@
 
 This is a Ruby tool to play mp3 files in a step sequencer.
 
-It also handles polyrhythmic playback and building sounds using effects like 
+It also handles polyrhythmic playback and building sounds using effects like
+loop, combine, slice, overlay, combine, gain, speed, and pitch
 
 #### Depedencies
 
