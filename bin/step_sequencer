@@ -6,5 +6,9 @@ class StepSequencer::CLI < Thor
   def test
     StepSequencer::Tests.run
   end
+  desc "repl", "start repl"
+  def repl
+    StepSequencer::REPL.run
+  end  
 end
 StepSequencer::CLI.start ARGV

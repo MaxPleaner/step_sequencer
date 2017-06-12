@@ -1,6 +1,3 @@
-require 'espeak'
-require 'method_source'
-
 # =============================================================================
 # A custom test runner. The tests themselves are in test_cases.rb
 # Usage: StepSequencer::Tests.run

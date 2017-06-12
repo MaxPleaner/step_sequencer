@@ -23,7 +23,7 @@ class StepSequencer::SoundBuilder::DefaultEffects::Pitch < protocol
   end
 
   class << self
-    public
+    private
     def build_outfile_name(source, value)
       "#{output_dir}/#{SecureRandom.urlsafe_base64}.mp3"
     end

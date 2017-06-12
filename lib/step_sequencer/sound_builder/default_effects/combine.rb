@@ -16,7 +16,7 @@ class StepSequencer::SoundBuilder::DefaultEffects::Combine < protocol
   # `sox #{sources.join(" ")} #{outfile}`
 
   class << self
-    public
+    private
     def generate_outfile_path(sources)
       "#{output_dir}/#{SecureRandom.urlsafe_base64}.mp3"
     end

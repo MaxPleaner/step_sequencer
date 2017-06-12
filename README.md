@@ -1,13 +1,13 @@
 ## Step Sequencer 
 
-#### About
-
 This is a Ruby tool to play mp3 files in a step sequencer.
 
 It also handles polyrhythmic playback and building sounds using effects like
 loop, combine, slice, overlay, combine, gain, speed, and pitch
 
-#### Depedencies
+## Setup
+
+### Dependencies
 
 Some external programs need to be installed:
 
@@ -15,7 +15,7 @@ Some external programs need to be installed:
 
 To run the tests, the program `espeak` is also required.
 
-#### Installing
+### Installing
 
 ```sh
 gem install step_sequencer
@@ -25,44 +25,69 @@ gem install step_sequencer
 require 'step_sequencer'
 ```
 
-#### Usage
+### Configuration
+
+The main point of config is to set the location that files are generated to.
+This program creates a lot of mp3s and doesn't automatically delete any of them.
+By default, the location is `./.step_sequencer/generated` which is a _relative
+path_. That means it's dependent on which directory the command was run from.
+To use an absolute path instead, set the `STEP_SEQUENCER_OUTPUT_DIR` environment
+variable.
+
+## REPL
+
+There is a Ruby-based REPL that ships with the gem.
+Launch it from shell with:
+
+```sh
+step_sequencer repl
+```
+
+and type 'help' or 'quit'. It will show the names of some helper functions
+that have been made available.
+Still, the REPL assumes familiarity with the underlying Ruby API.
+
+## Ruby API
 
 There are two main components: `StepSequencer::SoundBuilder` and
 `StepSequencer::SoundPlayer`
 
-**`StepSequencer::SoundBuilder`**
+### StepSequencer::SoundBuilder
 
-This offers only one public method, `.build`, which is drastically overloaded
-and dispatches to a number of other classes (each of which is responsible for
-a single effect). The definitions of these can be found in the source code at
- `lib/step_sequencer/sound_builder/default_effects/`. To add a custom effect,
- use one of the existing ones as a template and then add a reference to the class
- in the `StepSequencer::SoundBuilder::EffectsComponents` hash.
+This offers only one public method, `.build`, which is overloaded
+    and dispatches to a number of other classes (each of which is responsible for
+    a single effect). 
 
-Here is an example. It takes a single input mp3 and creates 12 new ones,
+_note_
+
+> The definitions of the default effects can be found in the source code at `lib/step_sequencer/sound_builder/default_effects/`. To add a custom effect, use one of the existing ones as a template and then add a reference to the class
+in the `StepSequencer::SoundBuilder::EffectsComponents` hash.
+
+Here is an example of using the builder. It takes a single input mp3 and creates 12 new ones,
 spanning the "equal temperament" tuning.
 
 ```rb
-# returns nested array (array of generated sounds for each source)
 builder = StepSequencer::SoundBuilder
 filenames = builder.build(
   sources: ["middle_c.mp3"],
   effect: :Scale,
   args: [{scale: :equal_temperament}]
-)
+).first
+# the :Scale effect returns a nested array (one array for each input source)
+# so after calling .first, filenames refers to a regular array of 12 file paths.
 ```
 
 The `:Scale` effect also allows an `inverse: true` key in `args` which will
 set all pitch change values to their inverse (creating a descending scale).
 
-Right now there is only the equal temperament option, more may be added later
+Right now there is only the equal temperament option, more may be added later.
 
 Now say I want to apply a 150% gain to all these files:
 
 ```rb
 # returns array of paths, one for each source
-new_filenames = builder.build(
-  sources: filenames.shift,
+filenames = builder.build(
+  sources: filenames
   effect: :Gain,
   args: [{value: 1.5}]
 )
@@ -70,20 +95,22 @@ new_filenames = builder.build(
 
 Other builtin effects:
 
-_change speed_ (returns array of paths, one for each source)
+_change speed_
 
 ```rb
-new_filenames = builder.build(
-  sources: new_filenames,
+# returns array of paths, one for each source
+filenames = builder.build(
+  sources: filenames,
   effect: :Speed,
   args: [{value: 0.5}]
 )
 ```
 
-_change pitch_ (returns array of paths, one for each source)
+_change pitch_
 
 ```rb
-new_filenames = builder.build(
+# returns array of paths, one for each source
+filenames = builder.build(
   sources: filenames,
   effect: :Pitch,
   args: [{value: 2}]
@@ -92,20 +119,22 @@ new_filenames = builder.build(
 # However the `speed_correction: false` arg will prevent this.
 ```
 
-_loop_ (returns array of paths, one for each source)
+_loop_
 
 ```rb
-new_filenames = builder.build(
+# returns array of paths, one for each source
+filenames = builder.build(
   sources: filenames,
   effect: :Loop,
   args: [{times: 1.5}]
 )
 ```
 
-_slice_ (returns array of paths, one for each source)
+_slice_
 
 ```rb
-new_filenames = builder.build(
+# returns array of paths, one for each source
+filenames = builder.build(
   sources: filenames,
   effect: :Slice,
   args: [{start_time: 0.5, end_time: 1}] # A 0.5 second slice
@@ -114,10 +143,11 @@ new_filenames = builder.build(
 )
 ```
 
-_combine_ (returns single path)
+_combine_
 
 ```rb
-new_filenames = builder.build(
+# returns single path
+path = builder.build(
   sources: filenames,
   effect: :Combine,
   args: [{filename: "foo.mp3"}], # filename arg is optional,
@@ -125,10 +155,11 @@ new_filenames = builder.build(
 )
 ```
 
-_overlay_ (returns single path)
+_overlay_
 
 ```rb
-new_filenames = builder.build(
+# returns single path
+path = builder.build(
   sources: filenames,
   effect: :Overlay,
   args: [{filename: "foo.mp3"}], # filename arg is optional,
@@ -141,10 +172,9 @@ As the above examples illustrate,  `#build` is always given an array of sources
 it's empty, `args` is always a array, the signature of which is dependent on the
 specific effects component's implementation.
 
-**`StepSequencer::SoundPlayer`**
+### StepSequencer::SoundPlayer
 
-Playing sounds is a two part process. First, the player must be initialized,
-which is when the sounds are mapped to rows.
+Playing sounds is a two part process. First, the player must be initialized, which is when the sounds are mapped to rows.
 
 For example, say I want to plug in the sounds I created earlier using
 `StepSequencer::SoundBuilder#build`. I have 12 sounds and I want to give each
@@ -158,7 +188,7 @@ After `#initialize`, only one other method needs to get called, and that's `play
 As you might have expected by now, it's overloaded as well:
 
 ```rb
-# This will play the descending scale, there is 1 row for each note
+# This will play the ascending scale, there is 1 row for each note
 player.play(
   tempo: 240
   string: <<-TXT
@@ -208,12 +238,14 @@ something like `sleep 0.5 while player.playing`
 as 16th notes at 120 BPM, use a tempo of 480. The default is 120.
 - The player isn't set up to be manipulated while playing. Use a new instance instead.
 
-#### Todos
+## Todos
 
 - precompile the grid into a single mp3. this will result in optimal playback
-- make a nice REPL
+- support inlining effect directives into the grid (not just a separate build
+stage). Part of this could be supporting different note flags, such as whole notes,
+half notes, etc.
 
-#### Tests
+## Tests
 
 The tests are found in lib/step_sequencer/tests.rb. They are not traditional
 unit tests since the value cannot be automatically determined to be correct.

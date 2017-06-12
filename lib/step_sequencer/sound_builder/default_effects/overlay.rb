@@ -15,7 +15,7 @@ class StepSequencer::SoundBuilder::DefaultEffects::Overlay < protocol
   end
 
   class << self
-    public
+    private
     def build_outfile_path
       "#{output_dir}/#{SecureRandom.urlsafe_base64}.mp3"
     end

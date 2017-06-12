@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'thor', "~> 0.19"
   s.add_dependency 'method_source', "~> 0.8"
   s.add_dependency 'espeak-ruby', "~> 1"
+  s.add_dependency 'pry', "~> 0.10"
   s.executables = Dir["bin/*"].map &File.method(:basename)
   s.license     = 'MIT'
 end

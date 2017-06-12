@@ -1,5 +1,7 @@
-require 'byebug'
 require 'securerandom'
+require 'pry'
+require 'espeak'
+require 'method_source'
 
 Thread.abort_on_exception = true
 
