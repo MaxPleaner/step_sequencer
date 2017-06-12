@@ -10,7 +10,7 @@ class StepSequencer::SoundBuilder::EffectsComponentProtocol
 
   class << self
     
-    protected
+    public
 
     # Helper method to call other effects
     def builder
