@@ -29,7 +29,7 @@ require 'step_sequencer'
 There are two main components: `StepSequencer::SoundBuilder` and
 `StepSequencer::SoundPlayer`
 
-##### 1. **`StepSequencer::SoundBuilder`**
+**`StepSequencer::SoundBuilder`**
 
 This offers only one public method, `.build`, which is drastically overloaded
 and dispatches to a number of other classes (each of which is responsible for
@@ -138,7 +138,7 @@ As the above examples illustrate,  `#build` is always given an array of sources
 it's empty, `args` is always a array, the signature of which is dependent on the
 specific effects component's implementation.
 
-#### 2. **`StepSequencer::SoundPlayer`**
+**`StepSequencer::SoundPlayer`**
 
 Playing sounds is a two part process. First, the player must be initialized,
 which is when the sounds are mapped to rows.
