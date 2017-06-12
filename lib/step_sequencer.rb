@@ -2,6 +2,7 @@ require 'securerandom'
 require 'pry'
 require 'espeak'
 require 'method_source'
+require 'colored'
 
 Thread.abort_on_exception = true
 
