@@ -4,7 +4,7 @@ class StepSequencer::SoundBuilder::EffectsComponentProtocol
   def self.build(sources:, args:)
     raise "
       ERROR.
-      Something inheriting from #{self.class} didn't implement #build.
+      Something inheriting from EffectsComponentProtocol didn't implement #build.
     "
   end
 
