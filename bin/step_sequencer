@@ -2,6 +2,10 @@
 require 'step_sequencer'
 require 'thor'
 class StepSequencer::CLI < Thor
+  desc "version", "print version"
+  def version
+    puts StepSequencer::VERSION
+  end
   desc "test", "run tests"
   def test
     StepSequencer::Tests.run

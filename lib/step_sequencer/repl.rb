@@ -13,6 +13,11 @@ class StepSequencer::REPL
   class Helpers
 
     HelpSections = {
+      download: "
+        Usage: download #{"\"<youtube url>\"".blue}, #{"\"<out dir>\"".blue} #{"\"<filename>\"".blue}
+        - requires youtube-dl program to be installed on computer
+        - e.g. download 'http://youtube.com/asd', '~/Desktop', 'foo.mp3'
+      ",
       play: "
         Usage: play #{"\"<path>\"".blue}
         - plays the file in its own thread using mpg123
@@ -94,6 +99,10 @@ class StepSequencer::REPL
 
     def player
       StepSequencer::SoundPlayer
+    end
+
+    def download(url, outpath, filename)
+      YoutubeDownloader.download_audio url, outpath, filename
     end
 
     def combine(paths)
