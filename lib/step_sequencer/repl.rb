@@ -132,7 +132,7 @@ class StepSequencer::REPL
     def pitch(path, val, speed_correct=true)
       builder.build(
         sources: [path], effect: :Pitch,
-        args: [{times: val, speed_correction: speed_correct}]
+        args: [{value: val, speed_correction: speed_correct}]
       )[0]
     end
 
