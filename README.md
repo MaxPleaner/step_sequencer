@@ -3,7 +3,7 @@
 This is a Ruby tool to play mp3 files in a step sequencer.
 
 It also handles polyrhythmic playback and building sounds using effects like
-loop, combine, slice, overlay, combine, gain, speed, and pitch
+loop, combine, slice, overlay, combine, gain, speed, pitch, and download.
 
 ## Setup
 
@@ -12,6 +12,8 @@ loop, combine, slice, overlay, combine, gain, speed, and pitch
 Some external programs need to be installed:
 
 `mpg123 ffmpeg sox libsox-fmt-mp3`
+
+If using the 'download' command, then `youtube-dl` is needed.
 
 To run the tests, the program `espeak` is also required.
 
@@ -261,3 +263,16 @@ step_sequencer test
 
 They can also be run from code: `require 'step_sequencer'` then
 `StepSequencer::Tests.run`.
+
+## Downloading music from youtube
+
+Bundled into this gem is [youtube_audio_downloader](http://github.com/maxpleaner/youtube-audio-downloader),
+which provides a simple command to download audio from youtube:
+
+```rb
+YoutubeAudioDownloader.download(
+  "https://www.youtube.com/watch?v=Niuy_GqpU1s",
+  "~/Music",
+  "necrophagist_seven.mp3"
+)
+```

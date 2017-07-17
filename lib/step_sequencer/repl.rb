@@ -102,7 +102,7 @@ class StepSequencer::REPL
     end
 
     def download(url, outpath, filename)
-      YoutubeDownloader.download_audio url, outpath, filename
+      YoutubeAudioDownloader.download_audio url, outpath, filename
     end
 
     def combine(paths)

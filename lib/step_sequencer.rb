@@ -3,6 +3,7 @@ require 'pry'
 require 'espeak'
 require 'method_source'
 require 'colored'
+require 'youtube_audio_downloader'
 
 Thread.abort_on_exception = true
 
@@ -15,10 +16,6 @@ require refinements_file
 
 # Also require the version file
 version_file = Gem.find_files("version.rb").shift
-require version_file
-
-# Also require the youtube downloader
-version_file = Gem.find_files("youtube_downloader.rb").shift
 require version_file
 
 # Add a little util method to access the refinements from other files.

@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'espeak-ruby', "~> 1"
   s.add_dependency 'pry', "~> 0.10"
   s.add_dependency 'colored', "~> 1.2"
+  s.add_dependency 'youtube_audio_downloader', ">= 1.0.1"
   s.executables = Dir["bin/*"].map &File.method(:basename)
   s.license     = 'MIT'
 end
